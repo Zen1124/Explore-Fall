@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      #tutorial {
+        background-color: yellow;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="tutorial" width="800" height="800"></canvas>
+    <script>
+      var x = 50;
+      var y = 50;
+      var dx = 10;
+      var dy = 1;
+
+      var x2 = 250;
+      var y2 = 125;
+      var dx2 = 0.75;
+      var dy2 = 1.25;
+
+      function displayFrame() {
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+
+            // display ball 1
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, Math.PI * 2, false);
+            ctx.strokeStyle = '#bada55';
+            ctx.closePath();
+            ctx.stroke();
+
+            // display ball 2
+            ctx.beginPath();
+            ctx.arc(x2, y2, 30, 0, Math.PI * 2, false);
+            ctx.strokeStyle = 'purple';
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        x = x + dx;
+        y = y + dy;
+
+        x2 = x2 + dx2;
+        y2 = y2 + dy2;
+
+        if (y < 0 || y > canvas.height) { // reverse
+            dy = -dy;
+        }
+
+        if (y2 < 0 || y2 > canvas.height) { // reverse
+            dy2 = -dy2;
+        }
+        if (x < 0 || x > canvas.width) { // reverse
+            dx = -dx;
+        }
+
+        if (x2 < 0 || x2 > canvas.width) { // reverse
+            dx2 = -dx2;
+        }
+        //console.log(x, y, dx, dy);
+      }
+
+      var animationId;
+      function draw() {
+        //animationId = setTimeout(draw, 100);
+        animationId = requestAnimationFrame(draw, 100);
+        displayFrame();
+      }
+      draw();
+
+    </script>
+  </body>
+</html>

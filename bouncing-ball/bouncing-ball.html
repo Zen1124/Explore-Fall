@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #background {
+            height: 100%;
+            width: 100%;
+            background-color: white;
+        }
+        body {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="background" width="1000" height="500"></canvas>
+    <script type="module">
+       import { displayFrame } from './sceneWithWall.js';
+
+        var animationId;
+        function draw() {
+            // animationId = setTimeout(draw, 100);
+            animationId = requestAnimationFrame(draw, 100);
+            displayFrame("background");
+        }
+        draw();
+    </script>
+   
+</body>
+</html>

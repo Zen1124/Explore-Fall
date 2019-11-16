@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      #pacman-map {
+        background-color: black;
+      }
+    </style>
+     <script
+     src="https://code.jquery.com/jquery-3.4.1.min.js"
+     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+     crossorigin="anonymous"></script>
+     <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <canvas id="pacman-map" width="800" height="800"></canvas>
+    <script>
+      const keyRight = 68;
+      const keyLeft = 65;
+      const keyUp = 87;
+      const keyDown = 83;
+      var rightPressed;
+      var leftPressed;
+      var upPressed;
+      var downPressed;
+      var socket = io();
+
+      function Pacman(x, y, dx, dy, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+
+        this.display = function (ctx) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, radius, 0.25 * Math.PI, 1.25 * Math.PI, false);
+          ctx.fillStyle = color;
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, radius, 0.75 * Math.PI, 1.75 * Math.PI, false);
+          ctx.fill();
+        }
+
+        this.updateposition = function (width, height, ctx) {
+          this.x = this.x + this.dx;
+          this.y = this.y + this.dy;
+
+          if (this.x + this.dx < 0 || this.x + this.dx > height) {
+            this.dx = -this.dx;
+          }
+
+          if (this.y + this.dy < 0 || this.y + this.dy > width) {
+            this.dy = -this.dy;
+          }
+        }
+
+        
+      }
+      var bruhman = new Pacman(100, 100, 0, 0, 50, 'yellow');
+     
+      function displayFrame() {
+        var canvas = document.getElementById('pacman-map');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 800, 800);
+            bruhman.display(ctx); 
+            bruhman.updateposition(canvas.height, canvas.width, ctx);    
+            window.addEventListener("keydown", doKeyDown, true);
+            window.addEventListener("keyup", doKeyUp, true);
+            
+            function doKeyDown(e) {
+              if ( e.keyCode == keyUp ) {//W
+                upPressed = true;
+                socket.emit('movement', 'upPressed');
+                setTimeout(function(){}, 3000);
+              }
+              if (e.keyCode == keyDown ) {//S
+                downPressed = true;
+                socket.emit('movement', 'downPressed');
+                setTimeout(function(){}, 3000);             
+              }
+
+              if ( e.keyCode == keyLeft) {//A
+                leftPressed = true;
+                socket.emit('movement', 'leftPressed');
+                setTimeout(function(){}, 3000);
+              }
+
+              if ( e.keyCode == keyRight ) {//D
+                rightPressed = true;
+                socket.emit('movement', 'rightPressed');
+                setTimeout(function(){}, 3000);
+              }
+            }  
+            
+            function doKeyUp(e) {
+              if ( e.keyCode == keyUp ) {//W
+                upPressed = false;
+                socket.emit('movement', 'stopupPressed');
+                return false;
+                setTimeout(function(){}, 3000);
+              }
+              if (e.keyCode == keyDown ) {//S
+                downPressed = false;
+                socket.emit('movement', 'stopdownPressed');
+                setTimeout(function(){}, 3000); 
+              }
+              if ( e.keyCode == keyLeft) {//A
+                leftPressed = false;
+                socket.emit('movement', 'stopleftPressed');
+                setTimeout(function(){}, 3000);
+                
+
+              }
+              if ( e.keyCode == keyRight ) {//D
+                rightPressed = false;
+                socket.emit('movement', 'stoprightPressed');
+                setTimeout(function(){}, 3000);
+              }
+            } 
+
+            socket.on('movement', function(dir) {
+              console.log(dir);
+              if(dir === 'rightPressed') {
+                if(dir === 'stoprightPressed') {
+                } else {
+                  ctx.clearRect(0, 0, 800, 800);
+                  bruhman.dx = 1;
+                  bruhman.dy = 0;
+                  bruhman.updateposition(canvas.height, canvas.width, ctx);
+                  bruhman.display(ctx); 
+                }
+                
+              } 
+              else if(dir === 'leftPressed') {
+                if(dir === 'stopleftPressed') {
+                } else {
+                  ctx.clearRect(0, 0, 800, 800);
+                  bruhman.dx = -1;
+                  bruhman.dy = 0;
+                  bruhman.updateposition(canvas.height, canvas.width, ctx);
+                  bruhman.display(ctx); 
+                }
+              }
+              else if(dir === 'downPressed') {
+                if(dir === 'stopdownPressed') {
+                } else {
+                  ctx.clearRect(0, 0, 800, 800);
+                  bruhman.dx = 0;
+                  bruhman.dy = 1;
+                  bruhman.updateposition(canvas.height, canvas.width, ctx);
+                  bruhman.display(ctx); 
+                }
+              }
+              else if(dir === 'upPressed') {
+                if(dir === 'stopupPressed') {
+                } else {
+                  ctx.clearRect(0, 0, 800, 800);
+                  bruhman.dx = 0;
+                  bruhman.dy = -1;
+                  bruhman.updateposition(canvas.height, canvas.width, ctx);
+                  bruhman.display(ctx); 
+                }
+              }
+            });
+            
+        }
+      }
+
+      var animationId;
+      function draw() {
+        //animationId = setTimeout(draw, 100);
+        animationId = requestAnimationFrame(draw, 100);
+        
+        displayFrame();
+      }
+      draw();
+
+    </script>
+  </body>
+</html>

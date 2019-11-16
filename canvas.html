@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      canvas {
+        border: 1px solid blue;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game" width="1000px" height="1000px"></canvas>
+    <script>
+      var canvas = document.getElementById('game');
+      var context = canvas.getContext('2d');
+
+      context.fillStyle = "blue";
+      context.fillRect(0, 0, 400, 400);
+
+      context.fillStyle = "purple";
+      context.fillRect(60, 450, 40, 40);
+
+      context.fillStyle = "yellow";
+      context.fillRect(60, 450, 40, 40);
+
+      context.lineWidth = 10;
+      context.strokeStyle = 'black';
+      context.strokeRect(60, 350, 80, 80);
+
+      context.font = "50px Helvetica";
+      context.fillStyle = "white";
+      context.fillText("Bruh", 40, 100);
+
+      //Paths
+      context.fillStyle = "black";
+      context.beginPath();
+      context.moveTo(500,500);
+      context.lineTo(500,590);
+      context.lineTo(590,500);
+      context.fill();
+
+      //Circle
+      var circle = new Path2D();
+      circle.moveTo(590, 590);
+
+      circle.arc(200, 500, 90, 0, 2 * Math.PI);
+
+      context.fill(circle);
+
+      var p = new Path2D('M20 20 h 80 v 80 h -80 Z');
+      context.fillStyle = 'purple';
+      context.fill(p);
+
+      
+
+
+    </script>
+  </body>
+</html>
